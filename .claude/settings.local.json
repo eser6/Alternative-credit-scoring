@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "PowerShell(cd \"C:\\\\Users\\\\Serug\\\\Desktop\\\\Credit_score-Updated\"; $env:FLASK_ENV = \"development\"; Start-Process -FilePath \"python\" -ArgumentList \"app.py\" -PassThru -WindowStyle Hidden | Select-Object Id | ForEach-Object { $global:FlaskPID = $_.Id; Write-Host \"Flask PID: $\\($_.Id\\)\" }; Start-Sleep -Seconds 3; Write-Host \"Flask started\")",
+      "PowerShell(Invoke-RestMethod -Uri \"http://127.0.0.1:5000/health\" -Method GET | ConvertTo-Json)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Get-Process *)"
+    ]
+  }
+}

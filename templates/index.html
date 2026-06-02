@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Credit Assessment — CreditIQ Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens (Banking/Traditional palette from ui-ux-pro-max) ── */
+    :root {
+      --navy:          #0F172A;
+      --navy-mid:      #1E293B;
+      --navy-accent:   #1E3A8A;
+      --gold:          #CA8A04;
+      --gold-light:    #FCD34D;
+      --bg:            #F1F5F9;
+      --surface:       #FFFFFF;
+      --border:        #E2E8F0;
+      --border-focus:  #3B82F6;
+      --text:          #020617;
+      --text-sec:      #475569;
+      --text-muted:    #94A3B8;
+      --approve:       #16A34A;
+      --approve-bg:    #F0FDF4;
+      --approve-bd:    #BBF7D0;
+      --review:        #D97706;
+      --review-bg:     #FFFBEB;
+      --review-bd:     #FDE68A;
+      --reject:        #DC2626;
+      --reject-bg:     #FEF2F2;
+      --reject-bd:     #FECACA;
+      --error:         #DC2626;
+      --radius:        8px;
+      --radius-lg:     12px;
+      --shadow-sm:     0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md:     0 4px 12px rgba(0,0,0,.09);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--navy);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 16px rgba(0,0,0,.30);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #F8FAFC;
+    }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--gold);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-name  { font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+    .logo-div   { width: 1px; height: 22px; background: rgba(255,255,255,.15); margin-left: 4px; }
+    .logo-sub   { font-size: .75rem; color: #94A3B8; padding-left: 8px; }
+    .header-pill {
+      margin-left: auto;
+      background: rgba(202,138,4,.15);
+      border: 1px solid rgba(202,138,4,.35);
+      color: #FCD34D;
+      font-size: .68rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* ── Page layout ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+    .page-heading { font-size: 1.4rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .page-sub     { font-size: .875rem; color: var(--text-sec); margin-bottom: 28px; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 370px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 920px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Card shell ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    /* ── Card section header (dark band) ── */
+    .sec-head {
+      background: var(--navy);
+      color: #F8FAFC;
+      padding: 11px 20px;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .sec-head + .sec-head { background: var(--navy-mid); }
+
+    .sec-icon {
+      width: 26px; height: 26px;
+      background: rgba(202,138,4,.22);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sec-title { font-size: .85rem; font-weight: 600; letter-spacing: .02em; }
+
+    /* ── Section body ── */
+    .sec-body { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+    .sec-body:last-of-type { border-bottom: none; }
+
+    .sec-label {
+      font-size: .72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-sec); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Field grid ── */
+    .row   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .row, .row-3 { grid-template-columns: 1fr; } }
+    .mt { margin-top: 14px; }
+
+    /* ── Field ── */
+    .field { display: flex; flex-direction: column; gap: 4px; }
+
+    label {
+      font-size: .78rem; font-weight: 500; color: var(--text-sec);
+    }
+    label .req  { color: var(--error); margin-left: 2px; }
+    label .hint { font-weight: 400; color: var(--text-muted); font-size: .73rem; }
+
+    input[type="number"], select {
+      width: 100%; height: 40px;
+      padding: 0 11px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit; font-size: .875rem;
+      color: var(--text); background: var(--surface);
+      transition: border-color 150ms, box-shadow 150ms;
+      outline: none; cursor: pointer; appearance: none;
+      -webkit-appearance: none;
+    }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+    input:focus, select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+    }
+    input.is-err, select.is-err {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(220,38,38,.09);
+    }
+    input::placeholder { color: var(--text-muted); }
+
+    .ferr {
+      font-size: .72rem; color: var(--error);
+      display: none; margin-top: 1px;
+    }
+    .ferr.show { display: block; }
+
+    /* ── Yes / No toggle ── */
+    .yesno {
+      display: flex; height: 40px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+    .yesno.is-err {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(220,38,38,.09);
+    }
+    .yesno input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .yesno label {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 500; color: var(--text-sec);
+      cursor: pointer;
+      transition: background 150ms, color 150ms;
+      border-right: 1px solid var(--border);
+    }
+    .yesno label:last-child { border-right: none; }
+    .yesno input[type="radio"]:focus-visible + label {
+      outline: 2px solid var(--border-focus); outline-offset: -2px;
+    }
+    .yesno input[type="radio"]:checked + label {
+      background: var(--navy); color: #F8FAFC; font-weight: 600;
+    }
+
+    /* ── Submit button ── */
+    .form-foot { padding: 18px 20px; }
+
+    .btn-submit {
+      width: 100%; height: 46px;
+      background: var(--navy); color: #F8FAFC;
+      border: none; border-radius: var(--radius);
+      font-family: inherit; font-size: .925rem; font-weight: 600;
+      cursor: pointer; letter-spacing: .01em;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      transition: background 180ms, transform 80ms;
+    }
+    .btn-submit:hover:not(:disabled) { background: #1E293B; }
+    .btn-submit:active:not(:disabled) { transform: scale(.99); }
+    .btn-submit:disabled { background: #94A3B8; cursor: not-allowed; }
+    .btn-submit:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 2px; }
+
+    /* spinner */
+    .spin {
+      width: 17px; height: 17px;
+      border: 2.5px solid rgba(255,255,255,.28);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: rot .65s linear infinite;
+      display: none; flex-shrink: 0;
+    }
+    @keyframes rot { to { transform: rotate(360deg); } }
+
+    /* ── API-level error banner ── */
+    .api-err {
+      background: var(--reject-bg);
+      border: 1px solid var(--reject-bd);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      font-size: .825rem; color: var(--reject);
+      margin-bottom: 16px;
+      display: none; align-items: flex-start; gap: 9px;
+    }
+    .api-err.show { display: flex; }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(202,138,4,.06);
+      border: 1px solid rgba(202,138,4,.22);
+      border-radius: var(--radius);
+      font-size: .73rem; color: var(--text-sec); line-height: 1.55;
+    }
+
+    /* ────────────────────────────────────────────────────
+       RESULTS PANEL
+    ──────────────────────────────────────────────────── */
+    .results-col { /* natural flow; children control stickiness */ }
+    .results-sticky { position: sticky; top: 76px; }
+
+    .results-empty {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 24px;
+      text-align: center; color: var(--text-muted);
+    }
+    .results-empty svg { opacity: .35; margin-bottom: 12px; }
+    .results-empty p { font-size: .875rem; line-height: 1.6; }
+
+    .results-card { display: none; }
+    .results-card.show {
+      display: block;
+      animation: fadeUp 300ms ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* ── Gauge area (dark band) ── */
+    .gauge-band {
+      background: var(--navy);
+      padding: 22px 20px 14px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .gauge-eyebrow {
+      font-size: .68rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: #64748B; margin-bottom: 6px;
+    }
+    .gauge-wrap { position: relative; width: 200px; height: 108px; }
+    .gauge-wrap svg { width: 200px; height: 108px; overflow: visible; }
+
+    .gauge-score-num {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      text-align: center;
+      font-size: 2.8rem; font-weight: 700; letter-spacing: -.04em;
+      color: #F8FAFC; line-height: 1;
+    }
+    .gauge-ticks {
+      display: flex; justify-content: space-between;
+      width: 200px; margin-top: 6px;
+      font-size: .67rem; color: #475569;
+    }
+    .gauge-bands {
+      display: flex; justify-content: space-between;
+      width: 200px;
+      font-size: .64rem; color: #64748B; margin-top: 2px;
+    }
+
+    /* ── Decision row ── */
+    .decision-row {
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .decision-lbl { font-size: .78rem; color: var(--text-sec); font-weight: 500; }
+
+    .badge {
+      padding: 5px 16px; border-radius: 999px;
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      border: 1.5px solid;
+    }
+    .badge-approve { color: var(--approve); background: var(--approve-bg); border-color: var(--approve-bd); }
+    .badge-review  { color: var(--review);  background: var(--review-bg);  border-color: var(--review-bd); }
+    .badge-reject  { color: var(--reject);  background: var(--reject-bg);  border-color: var(--reject-bd); }
+
+    /* ── Stats grid ── */
+    .stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .stat {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .stat:nth-child(even)            { border-right: none; }
+    .stat.full                        { grid-column: span 2; border-right: none; }
+    .stat:last-child, .stat.no-bot    { border-bottom: none; }
+
+    .stat-lbl {
+      font-size: .68rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-muted); margin-bottom: 4px;
+    }
+    .stat-val  { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .stat-val.sm { font-size: .85rem; font-weight: 600; }
+
+    .prob-low  { color: var(--approve); }
+    .prob-mid  { color: var(--review); }
+    .prob-high { color: var(--reject); }
+
+    .risk-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .82rem; font-weight: 600;
+      padding: 2px 10px; border-radius: 999px;
+    }
+    .risk-low    { color: var(--approve); background: var(--approve-bg); }
+    .risk-medium { color: var(--review);  background: var(--review-bg); }
+    .risk-high   { color: var(--reject);  background: var(--reject-bg); }
+    .risk-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* ── Reset button ── */
+    .btn-reset {
+      display: block; width: calc(100% - 40px);
+      margin: 14px 20px;
+      height: 36px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit; font-size: .82rem; font-weight: 500;
+      color: var(--text-sec); cursor: pointer;
+      transition: border-color 150ms, color 150ms;
+    }
+    .btn-reset:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-reset:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 2px; }
+
+    /* ── Score history ── */
+    .history-section { margin-top: 16px; }
+
+    .history-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px; padding: 0 2px;
+    }
+    .history-title {
+      font-size: .72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-sec);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hist-count {
+      background: var(--navy); color: #F8FAFC;
+      font-size: .65rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 999px;
+      min-width: 18px; text-align: center;
+    }
+    .btn-clear {
+      font-size: .72rem; font-weight: 500; color: var(--text-muted);
+      background: none; border: none; cursor: pointer; padding: 2px 4px;
+      border-radius: 4px; transition: color 150ms;
+    }
+    .btn-clear:hover { color: var(--reject); }
+    .btn-clear:focus-visible { outline: 2px solid var(--border-focus); }
+
+    .hist-list { border-radius: var(--radius-lg); overflow: hidden; }
+
+    .hist-row {
+      display: grid;
+      grid-template-columns: 22px 1fr auto auto;
+      align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      transition: background 120ms;
+    }
+    .hist-row:last-child { border-bottom: none; }
+    .hist-row:hover { background: #F8FAFC; }
+
+    .hist-idx {
+      font-size: .72rem; font-weight: 700; color: var(--text-muted);
+      text-align: right;
+    }
+    .hist-meta { min-width: 0; }
+    .hist-vendor {
+      font-size: .78rem; font-weight: 600; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .hist-time { font-size: .68rem; color: var(--text-muted); }
+
+    .hist-score {
+      font-size: .9rem; font-weight: 700; text-align: right;
+      min-width: 32px;
+    }
+    .hist-score.sc-good   { color: var(--approve); }
+    .hist-score.sc-mid    { color: var(--review); }
+    .hist-score.sc-poor   { color: var(--reject); }
+
+    .hist-badge {
+      font-size: .63rem; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 999px; border: 1px solid;
+      white-space: nowrap;
+    }
+    .hist-badge.dec-approve { color: var(--approve); background: var(--approve-bg); border-color: var(--approve-bd); }
+    .hist-badge.dec-review  { color: var(--review);  background: var(--review-bg);  border-color: var(--review-bd); }
+    .hist-badge.dec-reject  { color: var(--reject);  background: var(--reject-bg);  border-color: var(--reject-bd); }
+
+    .hist-empty {
+      padding: 20px; text-align: center;
+      font-size: .8rem; color: var(--text-muted);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header" role="banner">
+  <div class="header-inner">
+    <a href="/" class="logo" aria-label="CreditIQ Pro — Home">
+      <div class="logo-icon" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <span class="logo-name">CreditIQ Pro</span>
+      <span class="logo-div" aria-hidden="true"></span>
+      <span class="logo-sub">Vendor Credit Assessment</span>
+    </a>
+    <span class="header-pill" aria-label="Internal tool">Internal</span>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<main class="container" role="main">
+  <h1 class="page-heading">New Credit Assessment</h1>
+  <p class="page-sub">Complete all sections below. The model will return a score, decision, and risk profile.</p>
+
+  <div class="two-col">
+
+    <!-- ─── FORM COLUMN ─── -->
+    <div>
+      <!-- API error banner -->
+      <div id="apiErr" class="api-err" role="alert" aria-live="assertive">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="apiErrMsg"></span>
+      </div>
+
+      <form id="form" novalidate aria-label="Vendor credit assessment form">
+        <div class="card">
+
+          <!-- ── 1. VENDOR PROFILE ── -->
+          <div class="sec-head" role="heading" aria-level="2">
+            <div class="sec-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <span class="sec-title">Vendor Profile</span>
+          </div>
+
+          <div class="sec-body">
+            <div class="sec-label">Personal Information</div>
+            <div class="row">
+              <div class="field">
+                <label for="age">Age <span class="req" aria-hidden="true">*</span> <span class="hint">(21–65)</span></label>
+                <input type="number" id="age" name="age" min="21" max="65" placeholder="35" required aria-required="true" aria-describedby="age-err">
+                <span class="ferr" id="age-err" role="alert">Enter an age between 21 and 65.</span>
+              </div>
+              <div class="field">
+                <label for="gender">Gender <span class="req" aria-hidden="true">*</span></label>
+                <select id="gender" name="gender" required aria-required="true" aria-describedby="gender-err">
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                <span class="ferr" id="gender-err" role="alert">Please select a gender.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── 2. BUSINESS DETAILS ── -->
+          <div class="sec-body">
+            <div class="sec-label">Business Details</div>
+            <div class="row">
+              <div class="field">
+                <label for="region">Region <span class="req" aria-hidden="true">*</span></label>
+                <select id="region" name="region" required aria-required="true" aria-describedby="region-err">
+                  <option value="">Select region</option>
+                  <option value="Douala">Douala</option>
+                  <option value="Yaounde">Yaounde</option>
+                  <option value="Bamenda">Bamenda</option>
+                  <option value="Bafoussam">Bafoussam</option>
+                  <option value="Garoua">Garoua</option>
+                </select>
+                <span class="ferr" id="region-err" role="alert">Please select a region.</span>
+              </div>
+              <div class="field">
+                <label for="business_type">Business Type <span class="req" aria-hidden="true">*</span></label>
+                <select id="business_type" name="business_type" required aria-required="true" aria-describedby="btype-err">
+                  <option value="">Select type</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Food &amp; Beverage">Food &amp; Beverage</option>
+                  <option value="Services">Services</option>
+                  <option value="Agriculture">Agriculture</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                </select>
+                <span class="ferr" id="btype-err" role="alert">Please select a business type.</span>
+              </div>
+            </div>
+            <div class="field mt">
+              <label for="years_in_business">Years in Business <span class="req" aria-hidden="true">*</span> <span class="hint">(0–25)</span></label>
+              <input type="number" id="years_in_business" name="years_in_business" min="0" max="25" placeholder="5" required aria-required="true" aria-describedby="yib-err">
+              <span class="ferr" id="yib-err" role="alert">Enter a value between 0 and 25.</span>
+            </div>
+          </div>
+
+          <!-- ── 3. FINANCIAL INFORMATION ── -->
+          <div class="sec-head" style="background:var(--navy-mid)" role="heading" aria-level="2">
+            <div class="sec-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <span class="sec-title">Financial Information</span>
+          </div>
+
+          <div class="sec-body">
+            <div class="sec-label">Revenue &amp; Expenses <span class="hint" style="text-transform:none;font-size:.72rem;letter-spacing:0">(XAF)</span></div>
+            <div class="row">
+              <div class="field">
+                <label for="monthly_revenue_xaf">Monthly Revenue <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="monthly_revenue_xaf" name="monthly_revenue_xaf" min="1" placeholder="250 000" required aria-required="true" aria-describedby="rev-err">
+                <span class="ferr" id="rev-err" role="alert">Enter a valid revenue amount (must be &gt; 0).</span>
+              </div>
+              <div class="field">
+                <label for="monthly_expenses_xaf">Monthly Expenses <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="monthly_expenses_xaf" name="monthly_expenses_xaf" min="0" placeholder="120 000" required aria-required="true" aria-describedby="exp-err">
+                <span class="ferr" id="exp-err" role="alert">Enter a valid expenses amount (≥ 0).</span>
+              </div>
+            </div>
+            <div class="row mt">
+              <div class="field">
+                <label for="profit_margin">Profit Margin <span class="req" aria-hidden="true">*</span> <span class="hint">(0.01–0.99)</span></label>
+                <input type="number" id="profit_margin" name="profit_margin" min="0.01" max="0.99" step="0.01" placeholder="0.52" required aria-required="true" aria-describedby="pm-err">
+                <span class="ferr" id="pm-err" role="alert">Enter a margin between 0.01 and 0.99.</span>
+              </div>
+              <div class="field">
+                <label for="avg_wallet_balance_xaf">Avg Mobile Wallet Balance <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="avg_wallet_balance_xaf" name="avg_wallet_balance_xaf" min="0" placeholder="85 000" required aria-required="true" aria-describedby="wal-err">
+                <span class="ferr" id="wal-err" role="alert">Enter a valid wallet balance (≥ 0).</span>
+              </div>
+            </div>
+            <div class="field mt">
+              <label for="mobile_money_txn_count">Monthly Mobile Money Transactions <span class="req" aria-hidden="true">*</span> <span class="hint">(10–80)</span></label>
+              <input type="number" id="mobile_money_txn_count" name="mobile_money_txn_count" min="10" max="80" placeholder="48" required aria-required="true" aria-describedby="txn-err">
+              <span class="ferr" id="txn-err" role="alert">Enter a value between 10 and 80.</span>
+            </div>
+          </div>
+
+          <!-- ── 4. CREDIT HISTORY ── -->
+          <div class="sec-head" style="background:var(--navy-mid)" role="heading" aria-level="2">
+            <div class="sec-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </div>
+            <span class="sec-title">Credit History</span>
+          </div>
+
+          <div class="sec-body">
+            <div class="sec-label">Payment Records</div>
+            <div class="row">
+              <div class="field">
+                <label id="lbl-util">Utility Payment Record <span class="req" aria-hidden="true">*</span></label>
+                <div class="yesno" id="yesno-util" role="radiogroup" aria-labelledby="lbl-util" aria-describedby="util-err">
+                  <input type="radio" name="utility_payment_score" id="util1" value="1">
+                  <label for="util1">Yes</label>
+                  <input type="radio" name="utility_payment_score" id="util0" value="0">
+                  <label for="util0">No</label>
+                </div>
+                <span class="ferr" id="util-err" role="alert">Please select an option.</span>
+              </div>
+              <div class="field">
+                <label id="lbl-supp">Supplier Credit Record <span class="req" aria-hidden="true">*</span></label>
+                <div class="yesno" id="yesno-supp" role="radiogroup" aria-labelledby="lbl-supp" aria-describedby="supp-err">
+                  <input type="radio" name="supplier_credit_history" id="supp1" value="1">
+                  <label for="supp1">Yes</label>
+                  <input type="radio" name="supplier_credit_history" id="supp0" value="0">
+                  <label for="supp0">No</label>
+                </div>
+                <span class="ferr" id="supp-err" role="alert">Please select an option.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-body">
+            <div class="sec-label">Bureau Score</div>
+            <div class="field">
+              <label for="credit_score">Bureau Credit Score <span class="req" aria-hidden="true">*</span> <span class="hint">(300–850)</span></label>
+              <input type="number" id="credit_score" name="credit_score" min="300" max="850" placeholder="680" required aria-required="true" aria-describedby="cs-err">
+              <span class="ferr" id="cs-err" role="alert">Enter a bureau score between 300 and 850.</span>
+            </div>
+          </div>
+
+          <!-- ── SUBMIT ── -->
+          <div class="form-foot">
+            <button type="submit" class="btn-submit" id="submitBtn" aria-label="Run credit assessment">
+              <div class="spin" id="spin" aria-hidden="true"></div>
+              <span id="btnLabel" style="display:flex;align-items:center;gap:8px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Score Vendor
+              </span>
+            </button>
+
+            <p class="disclaimer" role="note">
+              <strong>Notice:</strong> For internal use only. AI-generated scores must be reviewed alongside standard due-diligence procedures before any credit decision is finalised.
+            </p>
+          </div>
+
+        </div><!-- /card -->
+      </form>
+    </div><!-- /form col -->
+
+
+    <!-- ─── RESULTS COLUMN ─── -->
+    <aside class="results-col" aria-label="Credit assessment results">
+
+      <!-- Sticky result area -->
+      <div class="results-sticky">
+
+        <!-- Empty state -->
+        <div id="resEmpty" class="results-empty" aria-live="polite">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="24" cy="24" r="20" stroke="#CBD5E1" stroke-width="1.5"/>
+            <path d="M24 15v9l5 5" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <p>Submit the form to see<br>the credit assessment result.</p>
+        </div>
+
+        <!-- Results card (hidden until scored) -->
+        <div id="resCard" class="card results-card" role="region" aria-label="Scoring result" aria-live="polite" aria-atomic="true">
+
+          <!-- Gauge -->
+          <div class="gauge-band">
+            <div class="gauge-eyebrow">Credit Score</div>
+            <div class="gauge-wrap">
+              <svg viewBox="0 0 200 108" aria-hidden="true">
+                <circle cx="100" cy="100" r="80"
+                  fill="none" stroke="rgba(255,255,255,.07)"
+                  stroke-width="13" stroke-linecap="round"
+                  stroke-dasharray="251.3 251.3"
+                  transform="rotate(180,100,100)"/>
+                <circle cx="100" cy="100" r="80" id="gaugeFill"
+                  fill="none" stroke="#22C55E"
+                  stroke-width="13" stroke-linecap="round"
+                  stroke-dasharray="251.3 251.3"
+                  stroke-dashoffset="251.3"
+                  transform="rotate(180,100,100)"
+                  style="transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1),stroke .45s ease"/>
+              </svg>
+              <div class="gauge-score-num" id="gaugeNum" aria-label="Credit score value">—</div>
+            </div>
+            <div class="gauge-ticks" aria-hidden="true"><span>300</span><span>575</span><span>850</span></div>
+            <div class="gauge-bands" aria-hidden="true"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div>
+          </div>
+
+          <!-- Decision -->
+          <div class="decision-row">
+            <span class="decision-lbl">Lending Decision</span>
+            <span id="decBadge" class="badge badge-approve" role="status" aria-live="polite">—</span>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats" role="list">
+            <div class="stat" role="listitem">
+              <div class="stat-lbl">Default Probability</div>
+              <div class="stat-val" id="statProb">—</div>
+            </div>
+            <div class="stat" role="listitem">
+              <div class="stat-lbl">Risk Band</div>
+              <div class="stat-val" id="statRisk">—</div>
+            </div>
+            <div class="stat full no-bot" role="listitem">
+              <div class="stat-lbl">Model Used</div>
+              <div class="stat-val sm" id="statModel">—</div>
+            </div>
+          </div>
+
+          <button class="btn-reset" id="resetBtn" type="button" aria-label="Start a new assessment">
+            New Assessment
+          </button>
+
+        </div><!-- /results card -->
+      </div><!-- /results-sticky -->
+
+      <!-- ── Score History (scrolls normally below the sticky card) ── -->
+      <div id="historySection" class="history-section" style="display:none" aria-label="Session score history">
+        <div class="history-hdr">
+          <span class="history-title">
+            Session History
+            <span id="histCount" class="hist-count" aria-label="Number of scored vendors">0</span>
+          </span>
+          <button id="clearHistBtn" class="btn-clear" type="button" aria-label="Clear session history">
+            Clear
+          </button>
+        </div>
+        <div class="hist-list card" id="historyList" role="list" aria-live="polite"></div>
+      </div>
+
+    </aside>
+
+  </div><!-- /two-col -->
+</main>
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script>
+  'use strict';
+
+  const API      = '/score';
+  const HALF_C   = 251.3;   // π × r (r=80), semicircle arc length
+  const SCORE_MIN = 300, SCORE_MAX = 850;
+
+  /* ── DOM refs ── */
+  const $   = id => document.getElementById(id);
+  const form      = $('form');
+  const apiErr    = $('apiErr');
+  const apiErrMsg = $('apiErrMsg');
+  const submitBtn = $('submitBtn');
+  const spin      = $('spin');
+  const btnLabel  = $('btnLabel');
+  const resEmpty  = $('resEmpty');
+  const resCard   = $('resCard');
+  const gaugeFill = $('gaugeFill');
+  const gaugeNum  = $('gaugeNum');
+  const decBadge  = $('decBadge');
+  const statProb  = $('statProb');
+  const statRisk  = $('statRisk');
+  const statModel = $('statModel');
+  const resetBtn  = $('resetBtn');
+
+  /* ── Validation rules ── */
+  const STRING_FIELDS = new Set(['gender','region','business_type','utility_payment_score','supplier_credit_history']);
+
+  const RULES = {
+    age:                     { min:21,   max:65,   errId:'age-err'    },
+    gender:                  {                     errId:'gender-err', isStr:true },
+    region:                  {                     errId:'region-err', isStr:true },
+    business_type:           {                     errId:'btype-err',  isStr:true },
+    years_in_business:       { min:0,    max:25,   errId:'yib-err'    },
+    monthly_revenue_xaf:     { min:.001,           errId:'rev-err'    },
+    monthly_expenses_xaf:    { min:0,              errId:'exp-err'    },
+    profit_margin:           { min:.01,  max:.99,  errId:'pm-err'     },
+    mobile_money_txn_count:  { min:10,   max:80,   errId:'txn-err'    },
+    avg_wallet_balance_xaf:  { min:0,              errId:'wal-err'    },
+    utility_payment_score:   {                     errId:'util-err',  isStr:true },
+    supplier_credit_history: {                     errId:'supp-err',  isStr:true },
+    credit_score:            { min:300,  max:850,  errId:'cs-err'     },
+  };
+
+  /* Get value from form field (handles radio groups) */
+  function getValue(name) {
+    const els = form.elements[name];
+    if (!els) return '';
+    if (els instanceof RadioNodeList || (els.length && els[0].type === 'radio')) {
+      const checked = form.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+    return els.value.trim();
+  }
+
+  /* Toggle field error state */
+  function setErr(name, rule, hasErr) {
+    const errEl = $(rule.errId);
+    if (errEl) errEl.classList.toggle('show', hasErr);
+
+    /* Highlight input / select / yesno */
+    const el = $(name) || form.querySelector(`#yesno-${name.replace('_payment_score','').replace('_credit_history','').replace('utility','util').replace('supplier','supp')}`);
+    if (!el) {
+      /* fallback: try direct id */
+      const fallback = form.querySelector(`[name="${name}"]`);
+      if (fallback) {
+        const grp = fallback.closest('.yesno');
+        if (grp) grp.classList.toggle('is-err', hasErr);
+        else fallback.classList.toggle('is-err', hasErr);
+      }
+    } else {
+      el.classList.toggle('is-err', hasErr);
+    }
+  }
+
+  /* Validate all fields; returns true if valid */
+  function validate() {
+    let ok = true;
+    for (const [name, rule] of Object.entries(RULES)) {
+      const raw = getValue(name);
+      let valid;
+      if (rule.isStr) {
+        /* String / select / radio: must be non-empty and not the placeholder */
+        valid = raw !== '' && (rule.min === undefined || true);
+        if (name === 'utility_payment_score' || name === 'supplier_credit_history') {
+          valid = raw === '0' || raw === '1';
+        }
+      } else {
+        const n = parseFloat(raw);
+        valid = raw !== '' && !isNaN(n)
+             && (rule.min === undefined || n >= rule.min)
+             && (rule.max === undefined || n <= rule.max);
+      }
+      setErr(name, rule, !valid);
+      if (!valid) ok = false;
+    }
+    return ok;
+  }
+
+  /* ── Loading state ── */
+  function setLoading(on) {
+    submitBtn.disabled   = on;
+    spin.style.display   = on ? 'block' : 'none';
+    btnLabel.style.display = on ? 'none' : 'flex';
+    submitBtn.setAttribute('aria-busy', on);
+  }
+
+  /* ── API error banner ── */
+  function showApiErr(msg) {
+    apiErrMsg.textContent = msg;
+    apiErr.classList.add('show');
+    apiErr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function clearApiErr() { apiErr.classList.remove('show'); }
+
+  /* ── Animated number count-up ── */
+  function countUp(el, to, duration) {
+    const start = performance.now();
+    const from  = SCORE_MIN;
+    const tick  = now => {
+      const p = Math.min((now - start) / duration, 1);
+      const e = 1 - Math.pow(1 - p, 3);          // cubic ease-out
+      el.textContent = Math.round(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  /* ── Render results ── */
+  function render(data) {
+    const { credit_score, default_probability, decision, model_used, risk_band } = data;
+
+    /* Gauge fill */
+    const pct    = (credit_score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN);
+    const offset = HALF_C * (1 - pct);
+    const color  = credit_score >= 650 ? '#22C55E'
+                 : credit_score >= 450 ? '#F59E0B'
+                 : '#EF4444';
+
+    gaugeFill.style.stroke = color;
+    gaugeFill.style.strokeDashoffset = HALF_C;   // reset first frame
+    requestAnimationFrame(() => {
+      gaugeFill.style.strokeDashoffset = offset;
+    });
+
+    /* Score count-up */
+    gaugeNum.style.color = color;
+    countUp(gaugeNum, credit_score, 900);
+
+    /* Decision badge */
+    const cls = { APPROVE:'badge-approve', REVIEW:'badge-review', REJECT:'badge-reject' };
+    decBadge.textContent = decision;
+    decBadge.className   = `badge ${cls[decision] || 'badge-reject'}`;
+
+    /* Probability */
+    const pctStr = Math.round(default_probability * 100) + '%';
+    statProb.textContent = pctStr;
+    statProb.className = 'stat-val '
+      + (default_probability < 0.30 ? 'prob-low' : default_probability < 0.60 ? 'prob-mid' : 'prob-high');
+
+    /* Risk band */
+    const rMap = { Low:'risk-low', Medium:'risk-medium', High:'risk-high' };
+    statRisk.innerHTML =
+      `<span class="risk-pill ${rMap[risk_band] || 'risk-high'}" role="img" aria-label="Risk band: ${risk_band}">` +
+      `<span class="risk-dot" aria-hidden="true"></span>${risk_band}</span>`;
+
+    /* Model */
+    statModel.textContent = model_used;
+
+    /* Show panel */
+    resEmpty.style.display = 'none';
+    resCard.classList.add('show');
+    resCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ── Form submit ── */
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    clearApiErr();
+    if (!validate()) {
+      /* Focus first errored field */
+      const firstErr = form.querySelector('.is-err, .yesno.is-err');
+      if (firstErr) firstErr.focus();
+      return;
+    }
+
+    setLoading(true);
+
+    const payload = {
+      age:                    parseInt(getValue('age')),
+      gender:                 getValue('gender'),
+      region:                 getValue('region'),
+      business_type:          getValue('business_type'),
+      years_in_business:      parseInt(getValue('years_in_business')),
+      monthly_revenue_xaf:    parseFloat(getValue('monthly_revenue_xaf')),
+      monthly_expenses_xaf:   parseFloat(getValue('monthly_expenses_xaf')),
+      profit_margin:          parseFloat(getValue('profit_margin')),
+      mobile_money_txn_count: parseInt(getValue('mobile_money_txn_count')),
+      avg_wallet_balance_xaf: parseFloat(getValue('avg_wallet_balance_xaf')),
+      utility_payment_score:  parseInt(getValue('utility_payment_score')),
+      supplier_credit_history:parseInt(getValue('supplier_credit_history')),
+      credit_score:           parseInt(getValue('credit_score')),
+    };
+
+    try {
+      const res  = await fetch(API, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.status === 'error') {
+        showApiErr(data.message || `Server error (${res.status}). Please try again.`);
+        return;
+      }
+      render(data);
+      pushHistory(data, payload);
+    } catch {
+      showApiErr('Cannot reach the scoring server. Check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  /* ── Reset ── */
+  resetBtn.addEventListener('click', () => {
+    form.reset();
+    clearApiErr();
+    /* Clear all error states */
+    form.querySelectorAll('.is-err').forEach(el => el.classList.remove('is-err'));
+    form.querySelectorAll('.ferr.show').forEach(el => el.classList.remove('show'));
+    /* Reset results */
+    resCard.classList.remove('show');
+    resEmpty.style.display = '';
+    gaugeFill.style.strokeDashoffset = HALF_C;
+    gaugeNum.textContent  = '—';
+    gaugeNum.style.color  = '#F8FAFC';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ══════════════════════════════════════
+     SCORE HISTORY  (sessionStorage, max 10)
+     ══════════════════════════════════════ */
+  const HIST_KEY = 'creditiq_history';
+  const HIST_MAX = 10;
+
+  const histSection  = $('historySection');
+  const histCountEl  = $('histCount');
+  const histList     = $('historyList');
+  const clearHistBtn = $('clearHistBtn');
+
+  function getHistory() {
+    try { return JSON.parse(sessionStorage.getItem(HIST_KEY) || '[]'); }
+    catch { return []; }
+  }
+
+  function saveHistory(entries) {
+    sessionStorage.setItem(HIST_KEY, JSON.stringify(entries));
+  }
+
+  function pushHistory(result, payload) {
+    const entries = getHistory();
+    entries.unshift({
+      ts:           new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }),
+      credit_score: result.credit_score,
+      decision:     result.decision,
+      risk_band:    result.risk_band,
+      vendor_ref:   `${payload.business_type}, ${payload.region}`,
+    });
+    saveHistory(entries.slice(0, HIST_MAX));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const entries = getHistory();
+
+    if (entries.length === 0) {
+      histSection.style.display = 'none';
+      return;
+    }
+
+    histSection.style.display = '';
+    histCountEl.textContent = entries.length;
+
+    const decCls = { APPROVE:'dec-approve', REVIEW:'dec-review', REJECT:'dec-reject' };
+    const scCls  = s => s >= 650 ? 'sc-good' : s >= 450 ? 'sc-mid' : 'sc-poor';
+
+    histList.innerHTML = entries.map((e, i) =>
+      `<div class="hist-row" role="listitem">
+        <span class="hist-idx" aria-hidden="true">${entries.length - i}</span>
+        <div class="hist-meta">
+          <div class="hist-vendor" title="${e.vendor_ref}">${e.vendor_ref}</div>
+          <div class="hist-time">${e.ts}</div>
+        </div>
+        <span class="hist-score ${scCls(e.credit_score)}" aria-label="Score ${e.credit_score}">${e.credit_score}</span>
+        <span class="hist-badge ${decCls[e.decision] || 'dec-reject'}" aria-label="Decision: ${e.decision}">${e.decision}</span>
+      </div>`
+    ).join('');
+  }
+
+  clearHistBtn.addEventListener('click', () => {
+    sessionStorage.removeItem(HIST_KEY);
+    renderHistory();
+  });
+
+  /* Boot: show any history from earlier in the same tab session */
+  renderHistory();
+
+  /* ── Clear field error on user input ── */
+  form.addEventListener('change', e => {
+    const name = e.target.name;
+    if (!name || !RULES[name]) return;
+    const rule = RULES[name];
+    const errEl = $(rule.errId);
+    if (errEl) errEl.classList.remove('show');
+    e.target.classList.remove('is-err');
+    const grp = e.target.closest('.yesno');
+    if (grp) grp.classList.remove('is-err');
+  });
+  form.addEventListener('input', e => {
+    const name = e.target.name;
+    if (!name || !RULES[name]) return;
+    const errEl = $(RULES[name].errId);
+    if (errEl) errEl.classList.remove('show');
+    e.target.classList.remove('is-err');
+  });
+</script>
+
+</body>
+</html>
