@@ -1,0 +1,8 @@
+services:
+  credit-scoring:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./model:/app/model   # mount so model can be updated without rebuilding
+    restart: unless-stopped

@@ -116,6 +116,59 @@ http://localhost:5000
 
 ---
 
+## Docker
+
+### Prerequisites
+
+[Docker Desktop](https://www.docker.com/products/docker-desktop/) must be installed and running.
+
+### Step 1 — Train the model
+
+The model file must exist locally before you build the image. Run the notebook then export:
+
+```bash
+# Run all cells in notebooks/credit_scoring_v2.ipynb first, then:
+python export_model.py
+```
+
+This creates `model/credit_scorer.pkl`. The Docker image copies this file in at build time.
+
+> **Note:** The `model/` folder must contain `credit_scorer.pkl` before running `docker build`. If it is missing the container will start in degraded mode and all scoring requests will return 503.
+
+### Step 2 — Build the image
+
+```bash
+docker build -t credit-scoring-app .
+```
+
+### Step 3 — Run the container
+
+```bash
+docker run -p 5000:5000 credit-scoring-app
+```
+
+### Step 4 — Open the app
+
+```
+http://localhost:5000
+```
+
+### Alternative — Docker Compose
+
+Compose mounts `model/` as a live volume so you can swap the model file without rebuilding the image:
+
+```bash
+docker compose up --build
+```
+
+To stop:
+
+```bash
+docker compose down
+```
+
+---
+
 ## API Reference
 
 ### `GET /health`
